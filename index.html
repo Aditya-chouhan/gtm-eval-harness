@@ -1,0 +1,597 @@
+<!-- charset and viewport first -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GTM Eval Harness — measuring AI output instead of trusting it</title>
+<meta name="description" content="Wilson-interval precision, None-not-zero undefined semantics, chance-corrected judge agreement, and a deterministic README-grounding checker run as a self-audit across this whole portfolio.">
+<link rel="canonical" href="https://aditya-chouhan.github.io/gtm-eval-harness/">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08080A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GTM Eval Harness — measuring AI output instead of trusting it">
+<meta property="og:description" content="Wilson-interval precision, None-not-zero undefined semantics, chance-corrected judge agreement, and a deterministic README-grounding checker run as a self-audit across this whole portfolio.">
+<meta property="og:url" content="https://aditya-chouhan.github.io/gtm-eval-harness/">
+<meta property="og:image" content="https://aditya-chouhan.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231D1D1F'/%3E%3Ctext x='32' y='44' font-family='-apple-system,BlinkMacSystemFont,Helvetica,Arial' font-size='36' font-weight='600' fill='%23fff' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+<style>
+/* ===================================================================
+   Case-study design system — Apple-native glass + monochrome
+   Canonical source. Inline verbatim into each project page's <style>.
+   Tokens are identical to aditya-chouhan.github.io/index.html.
+   =================================================================== */
+
+/* ---------- TOKENS ---------- */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --bg: #FFFFFF;
+  --bg-sunken: #F5F5F7;
+  --surface: #FFFFFF;
+  --chrome: rgba(255,255,255,0.72);
+  --text-1: #1D1D1F;
+  --text-2: #6E6E73;
+  --text-3: #86868B;
+  --hairline: rgba(0,0,0,0.08);
+  --hairline-strong: rgba(0,0,0,0.14);
+  --accent: #0066CC;
+  --accent-hover: #0055AA;
+  --code-bg: #1D1D1F;
+  --code-fg: #F5F5F7;
+  --code-dim: #86868B;
+
+  --e1: 0 1px 2px rgba(0,0,0,.04), 0 1px 1px rgba(0,0,0,.03);
+  --e2: 0 4px 16px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --e3: 0 12px 40px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.05);
+
+  --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem;
+  --s6:2rem; --s7:3rem; --s8:4rem; --s9:6rem; --s10:8rem;
+
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-full:999px;
+
+  --blur-chrome: 20px;
+  --wrap: 820px;
+
+  --damped: cubic-bezier(0.32, 0.72, 0, 1);
+  --bounce: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --micro: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08080A;
+    --bg-sunken: #101012;
+    --surface: #141416;
+    --chrome: rgba(20,20,22,0.72);
+    --text-1: #F5F5F7;
+    --text-2: #A1A1A6;
+    --text-3: #6E6E73;
+    --hairline: rgba(255,255,255,0.10);
+    --hairline-strong: rgba(255,255,255,0.18);
+    --accent: #2997FF;
+    --accent-hover: #5AAEFF;
+    --code-bg: #000000;
+    --code-fg: #E8E8ED;
+    --code-dim: #6E6E73;
+    --e1: 0 1px 2px rgba(0,0,0,.5);
+    --e2: 0 8px 28px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+    --e3: 0 20px 56px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.07);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08080A;
+  --bg-sunken: #101012;
+  --surface: #141416;
+  --chrome: rgba(20,20,22,0.72);
+  --text-1: #F5F5F7;
+  --text-2: #A1A1A6;
+  --text-3: #6E6E73;
+  --hairline: rgba(255,255,255,0.10);
+  --hairline-strong: rgba(255,255,255,0.18);
+  --accent: #2997FF;
+  --accent-hover: #5AAEFF;
+  --code-bg: #000000;
+  --code-fg: #E8E8ED;
+  --code-dim: #6E6E73;
+  --e1: 0 1px 2px rgba(0,0,0,.5);
+  --e2: 0 8px 28px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+  --e3: 0 20px 56px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+/* ---------- BASE ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color .25s ease, color .25s ease;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+img { max-width: 100%; height: auto; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--surface); color: var(--text-1);
+  padding: var(--s3) var(--s4); border-radius: var(--r-sm); box-shadow: var(--e3);
+}
+.skip:focus { left: var(--s4); top: var(--s4); }
+
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding-inline: var(--s5); }
+@media (min-width: 700px) { .wrap { padding-inline: var(--s6); } }
+
+/* ---------- TYPE ---------- */
+.t-display  { font-size: clamp(2rem, 4.6vw, 3rem); font-weight: 600; line-height: 1.06; letter-spacing: -0.025em; }
+.t-section  { font-size: clamp(1.375rem, 2.4vw, 1.75rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; }
+.t-title    { font-size: 1.25rem; font-weight: 600; line-height: 1.2; letter-spacing: -0.015em; }
+.t-headline { font-size: 1.0625rem; font-weight: 590; line-height: 1.3; letter-spacing: -0.01em; }
+.t-body-lg  { font-size: 1.1875rem; line-height: 1.55; letter-spacing: -0.003em; }
+.t-caption  { font-size: .875rem; line-height: 1.45; letter-spacing: .004em; }
+.t-micro {
+  font-family: var(--font-mono);
+  font-size: .75rem; font-weight: 590; line-height: 1.3;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.dim  { color: var(--text-2); }
+.dim3 { color: var(--text-3); }
+.balance { text-wrap: balance; }
+
+/* ---------- NAV (the only glass surface) ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  height: 52px; display: flex; align-items: center;
+  border-bottom: 1px solid transparent;
+  transition: background-color .35s var(--damped),
+              backdrop-filter .35s var(--damped),
+              border-color .35s var(--damped);
+}
+.nav[data-stuck="true"] {
+  background: var(--chrome);
+  -webkit-backdrop-filter: blur(var(--blur-chrome)) saturate(180%);
+  backdrop-filter: blur(var(--blur-chrome)) saturate(180%);
+  border-bottom-color: var(--hairline);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+.nav-back {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  font-size: .9375rem; font-weight: 500; color: var(--text-1);
+  padding: var(--s2) 0;
+}
+.nav-back:hover { color: var(--text-1); }
+.nav-back .arrow { display: inline-block; transition: transform .25s var(--damped); }
+.nav-back:hover .arrow { transform: translateX(-3px); }
+.nav-right { display: flex; align-items: center; gap: var(--s5); }
+.nav-right > a { font-size: .9375rem; font-weight: 500; color: var(--text-2); padding: var(--s2) 0; }
+.nav-right > a:hover { color: var(--text-1); }
+@media (max-width: 560px) { .nav-hide-sm { display: none; } }
+
+/* ---------- HERO ---------- */
+.hero { padding-top: var(--s8); padding-bottom: clamp(var(--s6), 4vw, var(--s7)); }
+.hero .eyebrow { color: var(--text-3); margin-bottom: var(--s4); }
+.hero h1 { margin-bottom: var(--s5); max-width: 22ch; }
+.hero .dek { color: var(--text-2); max-width: 62ch; }
+
+/* ---------- SECTIONS ---------- */
+main { padding-bottom: var(--s9); }
+.sec { padding-block: clamp(var(--s6), 4vw, var(--s7)); }
+.sec + .sec { border-top: 1px solid var(--hairline); }
+.sec > h2 { margin-bottom: var(--s3); }
+.sec .lede { color: var(--text-3); margin-bottom: var(--s5); max-width: 68ch; }
+.sec p { color: var(--text-2); max-width: 68ch; margin-bottom: var(--s4); }
+.sec p:last-child { margin-bottom: 0; }
+.sec p strong, .sec li strong { color: var(--text-1); font-weight: 590; }
+.sec ul.bullets { list-style: none; margin: 0 0 var(--s4); }
+.sec ul.bullets li {
+  position: relative; padding-left: var(--s5); margin-bottom: var(--s3);
+  color: var(--text-2); max-width: 68ch;
+}
+.sec ul.bullets li::before {
+  content: ""; position: absolute; left: var(--s2); top: .62em;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--text-3);
+}
+.sec ol.steps { list-style: none; counter-reset: step; margin: 0 0 var(--s4); }
+.sec ol.steps li {
+  counter-increment: step; position: relative;
+  padding-left: var(--s6); margin-bottom: var(--s4);
+  color: var(--text-2); max-width: 68ch;
+}
+.sec ol.steps li::before {
+  content: counter(step); position: absolute; left: 0; top: 0;
+  font-family: var(--font-mono); font-size: .75rem; font-weight: 590;
+  color: var(--text-3); line-height: 1.7;
+}
+
+/* ---------- DATA STRIP (replaces coloured metric pills) ----------
+   Every caveat sits inside the same strip as the number it qualifies,
+   so a disclosure can never be visually separated from its claim.     */
+.data {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .8125rem;
+  line-height: 1.65;
+  color: var(--text-2);
+  background: var(--bg-sunken);
+  border-left: 2px solid var(--hairline-strong);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s5);
+  overflow-wrap: anywhere;
+}
+.data:last-child { margin-bottom: 0; }
+.data b { color: var(--text-1); font-weight: 600; }
+.data .note { color: var(--text-3); }
+
+/* ---------- CARD ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--e1);
+  padding: var(--s5) var(--s5);
+  margin-bottom: var(--s4);
+}
+@media (min-width: 700px) { .card { padding: var(--s6); } }
+.card > h3 { margin-bottom: var(--s3); }
+.card p { color: var(--text-2); }
+.grid-2 { display: grid; gap: var(--s4); }
+@media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- TABLE ---------- */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--e1);
+  margin-bottom: var(--s4);
+  -webkit-overflow-scrolling: touch;
+}
+table { width: 100%; border-collapse: collapse; font-size: .875rem; min-width: 560px; }
+thead th {
+  text-align: left; white-space: nowrap;
+  font-family: var(--font-mono); font-size: .6875rem; font-weight: 590;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
+  padding: var(--s3) var(--s4);
+  background: var(--bg-sunken);
+  border-bottom: 1px solid var(--hairline);
+}
+tbody td {
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+tbody td.dim { color: var(--text-2); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background-color .2s var(--damped); }
+tbody tr:hover { background: var(--bg-sunken); }
+td.mono, .mono { font-family: var(--font-mono); font-size: .8125rem; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- TAG — neutral only. No trust colour anywhere. ---------- */
+.tag {
+  display: inline-block; white-space: nowrap;
+  font-family: var(--font-mono); font-size: .6875rem; font-weight: 590;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--text-2); background: var(--bg-sunken);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-full);
+  padding: 2px 9px;
+}
+.tag.strong { color: var(--text-1); border-color: var(--hairline-strong); }
+.taglist { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
+
+/* ---------- CODE ---------- */
+pre {
+  background: var(--code-bg); color: var(--code-fg);
+  border-radius: var(--r-md);
+  padding: var(--s5);
+  overflow-x: auto;
+  font-family: var(--font-mono); font-size: .8125rem; line-height: 1.7;
+  margin: 0 0 var(--s4);
+  -webkit-overflow-scrolling: touch;
+}
+pre .c { color: var(--code-dim); }
+code {
+  font-family: var(--font-mono); font-size: .875em;
+  background: var(--bg-sunken); color: var(--text-1);
+  border-radius: 5px; padding: .12em .38em;
+}
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+/* ---------- FIGURE ---------- */
+figure { margin: 0 0 var(--s4); }
+figure img { border-radius: var(--r-md); border: 1px solid var(--hairline); display: block; }
+figcaption { font-size: .8125rem; color: var(--text-3); margin-top: var(--s3); }
+
+/* ---------- CTA ---------- */
+.cta {
+  background: var(--bg-sunken);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-xl);
+  padding: var(--s6) var(--s5);
+  margin-top: var(--s7);
+}
+@media (min-width: 700px) { .cta { padding: var(--s7); } }
+.cta h2 { margin-bottom: var(--s3); }
+.cta p { color: var(--text-2); max-width: 56ch; margin-bottom: var(--s5); }
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 var(--s5);
+  border-radius: var(--r-full);
+  font-size: .9375rem; font-weight: 590; letter-spacing: -0.01em;
+  border: 1px solid transparent; cursor: pointer;
+  transition: background-color .25s var(--damped), border-color .25s var(--damped), color .25s var(--damped);
+}
+.btn-primary { background: var(--text-1); color: var(--bg); }
+.btn-primary:hover { background: var(--text-1); color: var(--bg); opacity: .88; }
+.btn-ghost { background: transparent; color: var(--text-1); border-color: var(--hairline-strong); }
+.btn-ghost:hover { background: var(--bg-sunken); color: var(--text-1); }
+
+/* ---------- FOOTER ---------- */
+.foot {
+  border-top: 1px solid var(--hairline);
+  padding-block: var(--s6);
+  display: flex; flex-wrap: wrap; gap: var(--s4);
+  justify-content: space-between; align-items: center;
+  font-size: .875rem; color: var(--text-3);
+}
+.foot a { color: var(--text-2); }
+.foot a:hover { color: var(--text-1); }
+.foot-links { display: flex; flex-wrap: wrap; gap: var(--s5); }
+
+/* ---------- MOTION ----------
+   Content is visible by DEFAULT. JS adds the pending state on init only
+   when it will actually observe the element. A JS failure never blanks
+   the page. A 1.2s failsafe reveals anything the observer never fired for. */
+[data-reveal="pending"] { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+[data-reveal="in"] {
+  opacity: 1; transform: none; filter: blur(0);
+  transition: opacity .55s var(--damped), transform .55s var(--damped), filter .55s var(--damped);
+}
+.pressed   { transform: scale(.978); transition: transform .12s var(--micro); }
+.unpressed { transform: scale(1);    transition: transform .4s var(--bounce); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .pressed, .unpressed { transform: none !important; }
+}
+@media (prefers-contrast: more) {
+  :root { --hairline: rgba(0,0,0,.35); --hairline-strong: rgba(0,0,0,.55); --text-2: #4A4A4E; --text-3: #5A5A5E; }
+  :root[data-theme="dark"], :root:not([data-theme="light"]) { }
+}
+@media print {
+  .nav, .cta, .skip { display: none !important; }
+  body { background: #fff; color: #000; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" id="nav" aria-label="Primary">
+  <div class="wrap">
+    <a class="nav-back" href="https://aditya-chouhan.github.io/"><span class="arrow">&larr;</span> Aditya Chouhan</a>
+    <span class="nav-right">
+      <a class="nav-hide-sm" href="https://github.com/Aditya-chouhan/gtm-eval-harness">Repository</a>
+      <a href="mailto:ai.adityachouhan@gmail.com?subject=Project">Get in touch</a>
+    </span>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="t-micro eyebrow">AI / agent engineering &middot; evaluation</div>
+  <h1 class="t-display balance">Measuring AI output in a GTM stack, instead of trusting it</h1>
+  <p class="t-body-lg dek">Wilson-interval precision, undefined-not-zero semantics, and chance-corrected judge agreement &mdash; then turned on this portfolio's own published numbers, including a re-check of a claim I made myself.</p>
+</header>
+
+<main id="main" class="wrap">
+
+  <section class="sec" aria-labelledby="s-problem">
+    <h2 class="t-section balance" id="s-problem">The problem</h2>
+    <p>AI-generated GTM output gets trusted or distrusted on vibes. A brief reads fluent, so it ships. Then someone finds a fabricated fact in an email that went to a real prospect, and the whole category loses credibility.</p>
+    <p>The gap isn't model quality. It's that almost nobody attaches a number to "how often is this wrong, and wrong in what way." Doing that is unglamorous, and it is the actual skill: turning an unpredictable system into a governable one.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="s-does">
+    <h2 class="t-section balance" id="s-does">What it does</h2>
+    <ul class="bullets">
+      <li><strong>Reports rates with intervals, never bare.</strong> 60.5% from 43 samples and 60.5% from 4,300 samples are different claims. Every proportion ships with a Wilson score interval, so sample size is visible inside the claim rather than buried in a methods note.</li>
+      <li><strong>Refuses to return flattering defaults.</strong> Precision over zero predictions is <code>None</code>, not <code>0.0</code>. A system that flagged nothing has undefined precision, and saying so is the honest answer.</li>
+      <li><strong>Breaks results down by group and flags concentration.</strong> If most of the sample came from one source, the pooled number is largely a statement about that source &mdash; the report says so, unprompted.</li>
+      <li><strong>Chance-corrects agreement.</strong> Raw agreement between an LLM judge and human labels is inflated by base rate &mdash; two raters who both mostly say "no" agree ~90% of the time while sharing no signal. Cohen's kappa is reported alongside.</li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="s-result1">
+    <h2 class="t-section balance" id="s-result1">Result one: re-analysing a published number, including my own</h2>
+    <p><a href="https://github.com/Aditya-chouhan/groundtruth">groundtruth</a> scanned 30 public repositories for a specific defect pattern, hand-checked all 43 candidates against the live GitHub API, and published <strong>26 true positives / 17 false positives = 60.5% precision</strong>, false positives included rather than hidden. That's already more honest than most published numbers. This harness asks the next two questions of it.</p>
+    <p class="data"><b>Precision: 60.5% (26/43)</b> &middot; 95% Wilson interval <b>[45.6%, 73.6%]</b> &mdash; 28.1 percentage points wide. <span class="note">At n=43 the sample cannot distinguish "about half" from "about three quarters." The point estimate was never wrong; alone, it implied a precision the sample doesn't support.</span></p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Repository</th><th>Precision</th><th>95% interval</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">mem0ai/mem0</td><td class="num">78.6% (22/28)</td><td class="dim">[60.5%, 89.8%]</td></tr>
+          <tr><td class="mono">run-llama/llama_index</td><td class="num">60.0% (3/5)</td><td class="dim">[23.1%, 88.2%]</td></tr>
+          <tr><td class="mono">pallets/flask</td><td class="num">0.0% (0/5)</td><td class="dim">[0.0%, 43.4%]</td></tr>
+          <tr><td class="mono">expressjs/express</td><td class="num">0.0% (0/2)</td><td class="dim">[0.0%, 65.8%]</td></tr>
+          <tr><td class="mono">streamlit/streamlit</td><td class="num">0.0% (0/2)</td><td class="dim">[0.0%, 65.8%]</td></tr>
+          <tr><td class="mono">fastify/fastify</td><td class="num">100.0% (1/1)</td><td class="dim">[20.7%, 100.0%]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="data"><b>65% of the sample (28 of 43) is a single repository.</b> The detector scores 78.6% on mem0ai/mem0 and 0-for-5 on Flask, 0-for-2 on Express, 0-for-2 on Streamlit. <span class="note">The pooled 60.5% is close to a weighted average of "works well on mem0" and "no signal elsewhere" &mdash; a materially different claim from "60% precision on open-source repos." Neither finding needed new data; both were sitting in the committed JSON.</span></p>
+    <pre>python scripts/analyze_groundtruth.py [path/to/groundtruth]</pre>
+    <p>No network access, no API key. Every number recomputes from <code>output/verified_findings.json</code> in a groundtruth checkout.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="s-result2">
+    <h2 class="t-section balance" id="s-result2">Result two: can a reader verify the numbers in a README?</h2>
+    <p>A write-up citing figures a reader cannot find in the repository is asking to be taken on trust. <code>scripts/check_readme_grounding.py</code> extracts every numeric claim from a README and checks it against that repo's <strong>committed</strong> data files (via <code>git ls-files</code> &mdash; the question is what a reader of the published repo can actually verify). Run across this whole portfolio:</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Repository</th><th>Claims verifiable from committed data</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">n8n-gtm-orchestration</td><td class="num">33/34 (97%) [85.1%, 99.5%]</td></tr>
+          <tr><td class="mono">gtm-data-quality-monitor</td><td class="num">20/24 (83%) [64.1%, 93.3%]</td></tr>
+          <tr><td class="mono">clay-enrichment-waterfall</td><td class="num">93/116 (80%) [72.0%, 86.4%]</td></tr>
+          <tr><td class="mono">gtm-signal-engine</td><td class="num">87/93 (94%)</td></tr>
+          <tr><td class="mono">gtm-warehouse</td><td class="num">29/36 (81%)</td></tr>
+          <tr><td class="mono">groundtruth</td><td class="num">20/31 (65%) [46.9%, 78.9%]</td></tr>
+          <tr><td class="mono">salesforce-gtm-org</td><td class="num">10/40 (25%) [14.2%, 40.2%]</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="data"><b>The standout is salesforce-gtm-org at 25%, and it's structural, not dishonest.</b> Its committed data files were <code>package.json</code> and <code>sfdx-project.json</code> only &mdash; no deploy log, no raw SOQL output &mdash; so the org results couldn't be checked by anyone reading the repository. <span class="note">A manual audit had reached the same conclusion independently; this reproduced it in seconds and caught the next instance without anyone remembering to look. Rates are not comparable across repos &mdash; a repo committing rich output scores high regardless of whether its claims are true; the number is a prompt to look, not a verdict.</span></p>
+    <pre>python scripts/check_readme_grounding.py ../some-repo [../another-repo ...]</pre>
+  </section>
+
+  <section class="sec" aria-labelledby="s-run">
+    <h2 class="t-section balance" id="s-run">Run it</h2>
+<pre>python3 -m venv .venv
+./.venv/bin/python -m pip install -e ".[dev]"
+./.venv/bin/python -m pytest tests/ -q     # 87 tests</pre>
+    <p>Tested on Python 3.9.6 &mdash; the system Python that ships with macOS. The metrics core imports nothing outside the standard library, so it runs anywhere Python does.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="s-doesnt">
+    <h2 class="t-section balance" id="s-doesnt">What this doesn't do</h2>
+    <ul class="bullets">
+      <li><strong>It doesn't call a model.</strong> Numeric claims are labelled deterministically, which is why this runs at zero cost with no API key.</li>
+      <li><strong>It only checks numeric claims.</strong> Whether a sentence fairly characterises a source needs a reader or a judge model &mdash; <code>LLMClaimChecker</code> defines that slot and raises <code>NotImplementedError</code> rather than pretending to fill it.</li>
+      <li><strong>"Supported" means the value appears in a source, not that it's used correctly.</strong> A brief that swaps two real figures between quarters passes this check &mdash; pinned in place by <code>test_documented_limitation_swapped_numbers_pass</code> so it stays known rather than becoming a surprise.</li>
+      <li><strong>The groundtruth re-analysis is not independent validation of groundtruth.</strong> Same author, same underlying run &mdash; a sharper reading of a published result, not a second opinion on it.</li>
+      <li><strong>Wilson intervals assume independent samples.</strong> The 28 candidates from mem0ai/mem0 share one codebase's conventions and are plausibly correlated, meaning the true interval is likely wider than reported, not narrower.</li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="s-design">
+    <h2 class="t-section balance" id="s-design">A real bug this caught in itself</h2>
+    <p>The concentration warning used <code>&gt;=</code> against its 0.5 threshold, which fired on a perfectly balanced two-group sample &mdash; the one case that should never warn. Fixed to <code>&gt;</code>; the test that caught it is <code>test_no_warning_on_balanced_sample</code>. The three decisions worth arguing about &mdash; undefined is not zero, point estimates never ship alone, agreement is measured against chance &mdash; are documented at the top of <code>src/gtm_eval/metrics.py</code>.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="s-files">
+    <h2 class="t-section balance" id="s-files">Files</h2>
+<pre>src/gtm_eval/metrics.py            Wilson intervals, precision/recall/F1 (None-safe), Cohen's kappa
+src/gtm_eval/grounding.py          numeric-claim extraction + normalisation (currency, %, lakh/crore)
+src/gtm_eval/report.py             stratified reporting, concentration warnings
+scripts/analyze_groundtruth.py     Result one, above
+scripts/check_readme_grounding.py  Result two, above
+tests/                             87 tests</pre>
+  </section>
+
+  <section class="cta" aria-labelledby="s-cta">
+    <h2 class="t-section" id="s-cta">Built something similar for your stack?</h2>
+    <p>I build signal-detection, enrichment and outbound systems inside your own tools. You own everything &mdash; nothing is locked to me.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="mailto:ai.adityachouhan@gmail.com?subject=Project">Start a conversation</a>
+      <a class="btn btn-ghost" href="https://github.com/Aditya-chouhan/gtm-eval-harness">View the code</a>
+    </div>
+  </section>
+
+</main>
+
+
+<footer class="foot wrap">
+  <span>Aditya Chouhan &mdash; GTM engineering, Mumbai</span>
+  <span class="foot-links">
+    <a href="https://aditya-chouhan.github.io/">All projects</a>
+    <a href="https://github.com/Aditya-chouhan">GitHub</a>
+    <a href="https://www.linkedin.com/in/aditya-chouhan-gtm/">LinkedIn</a>
+  </span>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var nav = document.getElementById('nav');
+  var hero = document.querySelector('.hero');
+  if (nav && hero) {
+    var setStuck = function () {
+      nav.dataset.stuck = (window.scrollY > hero.offsetHeight - 52) ? 'true' : 'false';
+    };
+    setStuck();
+    window.addEventListener('scroll', setStuck, { passive: true });
+  }
+
+  if (!reduce && 'IntersectionObserver' in window) {
+    var targets = document.querySelectorAll('.sec, .card, .cta');
+    Array.prototype.forEach.call(targets, function (el) { el.dataset.reveal = 'pending'; });
+
+    var io = new IntersectionObserver(function (entries) {
+      var i = 0;
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        el.style.transitionDelay = (i * 60) + 'ms';
+        i++;
+        el.dataset.reveal = 'in';
+        io.unobserve(el);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+
+    Array.prototype.forEach.call(targets, function (el) { io.observe(el); });
+
+    setTimeout(function () {
+      Array.prototype.forEach.call(
+        document.querySelectorAll('[data-reveal="pending"]'),
+        function (el) { el.style.transitionDelay = '0ms'; el.dataset.reveal = 'in'; }
+      );
+    }, 1200);
+  }
+
+  if (!reduce) {
+    var pressed = null;
+    var release = function () {
+      if (!pressed) return;
+      pressed.classList.remove('pressed');
+      pressed.classList.add('unpressed');
+      var el = pressed;
+      setTimeout(function () { el.classList.remove('unpressed'); }, 400);
+      pressed = null;
+    };
+    document.addEventListener('pointerdown', function (e) {
+      var el = e.target.closest('a.btn, button.btn, .nav-back, .nav-right > a');
+      if (!el) return;
+      pressed = el;
+      el.classList.remove('unpressed');
+      el.classList.add('pressed');
+    }, { passive: true });
+    ['pointerup', 'pointercancel', 'pointerleave', 'dragstart'].forEach(function (evt) {
+      document.addEventListener(evt, release, { passive: true });
+    });
+  }
+})();
+
+</script>

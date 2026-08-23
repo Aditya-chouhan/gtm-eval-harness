@@ -1,0 +1,23 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python bytecode — committed .pyc files were flagged in a prior portfolio
+# audit as reading like carelessness on repos whose pitch is rigour.
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Test and tooling caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Secrets
+.env
+.env.local
+
+# OS
+.DS_Store

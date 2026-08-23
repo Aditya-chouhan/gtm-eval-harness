@@ -1,0 +1,39 @@
+Source: /Users/adityachouhan/Projects/groundtruth/output/verified_findings.json
+Scanned at: 2026-08-15T20:11:31.943283+00:00
+Repos scanned: 30
+
+PRECISION
+  point estimate : 60.5%  (26/43)
+  95% interval   : [45.6%, 73.6%] (95% CI)
+  interval width : 28.1 percentage points
+
+  Reading: the published 60.5% is the centre of a range that
+  plausibly runs from about 46% to 74%. At n=43 the sample
+  cannot distinguish 'about half' from 'about three quarters'.
+
+RECALL AND ACCURACY
+  recall   : not computable -- the scan only surfaces candidates,
+             so the misses it never flagged were never labelled.
+  accuracy : not computable (no true negatives observed)
+
+PRECISION BY REPOSITORY
+=======================
+
+POOLED
+  60.5% (26/43)  [45.6%, 73.6%] (95% CI)
+
+BY GROUP (largest first)
+  mem0ai/mem0             78.6%  (22/28)  [60.5%, 89.8%] (95% CI)
+  pallets/flask            0.0%  (0/5)  [0.0%, 43.4%] (95% CI)
+  run-llama/llama_index   60.0%  (3/5)  [23.1%, 88.2%] (95% CI)
+  expressjs/express        0.0%  (0/2)  [0.0%, 65.8%] (95% CI)
+  streamlit/streamlit      0.0%  (0/2)  [0.0%, 65.8%] (95% CI)
+  fastify/fastify        100.0%  (1/1)  [20.7%, 100.0%] (95% CI)
+
+SAMPLE SHAPE
+  65% of the sample is a single group (mem0ai/mem0).
+  WARNING: the pooled figure above is substantially a statement
+  about mem0ai/mem0 and should not be presented as a general rate.
+
+Every number above recomputes from the committed JSON with no
+network access. Re-run this script to reproduce it.

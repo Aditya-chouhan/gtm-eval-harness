@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gtm-eval-harness"
+version = "0.1.0"
+description = "Measurement tools for GTM AI outputs: grounding, precision with intervals, and judge-vs-human agreement."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Aditya Chouhan" }]
+keywords = ["evaluation", "llm", "gtm", "hallucination", "grounding"]
+
+# The metrics core is deliberately dependency-free. Anything needing the
+# Anthropic SDK lives behind the `run` extra so the numbers stay reproducible
+# without an API key.
+dependencies = []
+
+[project.optional-dependencies]
+run = ["anthropic>=0.40.0"]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

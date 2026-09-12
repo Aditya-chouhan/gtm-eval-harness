@@ -106,7 +106,14 @@ claim from a README and checks it against that repo's **committed** data files
 (found via `git ls-files`, because the question is what a reader of the
 *published* repo can verify).
 
-Run across six repositories:
+Historical snapshot run across six repositories:
+
+> **Snapshot warning:** this table and
+> `output/readme-grounding-sweep.txt` predate later repository corrections and
+> evidence receipts, including Salesforce execution receipts and the Clay cost
+> rewrite. They are retained as historical research output and must not be read
+> as a current ranking. Re-run the checker against pinned commits before citing
+> a current rate.
 
 | Repository | Claims verifiable from committed data |
 |---|---|
@@ -117,14 +124,11 @@ Run across six repositories:
 | `salesforce-gtm-org` | **10/40 (25%)** [14.2%, 40.2%] |
 | `revenue-engine-system` | not checkable — no git repo present locally |
 
-The standout is `salesforce-gtm-org` at 25%, and the reason is structural
-rather than dishonest: **the only committed data files are `package.json` and
-`sfdx-project.json`.** There is no committed deploy log and no raw SOQL output,
-so the org results in that README — record tiers, validation-rule behaviour,
-query counts — cannot be checked by anyone reading the repository. A manual
-audit had reached the same conclusion independently; this reproduces it in a
-few seconds and would catch the next instance without anyone remembering to
-look.
+At the time of that snapshot, `salesforce-gtm-org` had no committed deploy log
+or raw test receipt. That is no longer the repository's current state: dated
+machine-readable and human-readable Apex test output has since been committed.
+The 25% figure describes the old snapshot and should not be used as a current
+assessment.
 
 **Rates are not comparable across repos.** A repository that commits rich
 output will score high; one that commits configuration only will score low
@@ -142,7 +146,7 @@ python scripts/check_readme_grounding.py ../some-repo [../another-repo ...]
 ```bash
 python3 -m venv .venv
 ./.venv/bin/python -m pip install -e ".[dev]"
-./.venv/bin/python -m pytest tests/ -q     # 50 tests
+./.venv/bin/python -m pytest tests/ -q     # 87 tests
 ```
 
 Tested on Python 3.9.6 — the system Python that ships with macOS. The metrics

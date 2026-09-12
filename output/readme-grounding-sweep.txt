@@ -1,3 +1,8 @@
+HISTORICAL SNAPSHOT — NOT A CURRENT REPOSITORY RANKING
+This output predates later Salesforce evidence receipts and Clay claim
+corrections. Re-run the checker against pinned commits before citing a current
+rate. The original output is retained below for reproducibility.
+
 ====================================================================
 n8n-gtm-orchestration
 ====================================================================
